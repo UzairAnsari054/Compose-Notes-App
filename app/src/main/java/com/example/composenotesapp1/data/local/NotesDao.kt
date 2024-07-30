@@ -39,6 +39,13 @@ interface NotesDao {
     @Query("SELECT * FROM noteTable WHERE id=:id")
     fun getNoteDetailsById(id: Int): Flow<NoteModel>
 
+    @Query("SELECT * FROM noteTable ORDER BY " +
+            "CASE WHEN :sortBy = 'title' AND :orderBy = 'ASC' THEN title END ASC, " +
+            "CASE WHEN :sortBy = 'title' AND :orderBy = 'DESC' THEN title END DESC, " +
+            "CASE WHEN :sortBy = 'created_at' AND :orderBy ='ASC' THEN created_at END ASC, " +
+            "CASE WHEN :sortBy = 'created_at' AND :orderBy ='DESC' THEN created_at END DESC, " +
+            "CASE WHEN :sortBy = 'updated_at' AND :orderBy ='ASC' THEN updated_at END ASC, " +
+            "CASE WHEN :sortBy = 'updated_at' AND :orderBy ='DESC' THEN created_at END DESC")
     fun getNotes(sortBy: String, orderBy: String): Flow<List<NoteModel>>
 
 }

@@ -1,6 +1,8 @@
 package com.example.composenotesapp1.data.local.vm
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,6 +23,10 @@ class NotesDetailsPageVM @Inject constructor(
     override val loader = MutableLiveData<Boolean>()
     override val markedNoteList: SnapshotStateList<NoteModel> = mutableStateListOf()
     override val noteDetails: MutableLiveData<Result<NoteModel>> = MutableLiveData()
+
+    override val titleText: MutableState<String> = mutableStateOf("")
+    override val descriptionText: MutableState<String> = mutableStateOf("")
+    override val isEditing: MutableState<Boolean> = mutableStateOf(false)
 
     override suspend fun deleteNotes(vararg notes: NoteModel): Result<Boolean> =
         withContext(Dispatchers.IO) {

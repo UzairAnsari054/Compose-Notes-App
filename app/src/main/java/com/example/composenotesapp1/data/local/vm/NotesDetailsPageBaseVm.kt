@@ -1,5 +1,6 @@
 package com.example.composenotesapp1.data.local.vm
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.MutableLiveData
 import com.example.composenotesapp1.data.model.NoteModel
@@ -11,6 +12,10 @@ interface NotesDetailsPageBaseVm {
     val markedNoteList: SnapshotStateList<NoteModel>
 
     val noteDetails: MutableLiveData<Result<NoteModel>>
+
+    val titleText: MutableState<String>
+    val descriptionText: MutableState<String>
+    val isEditing: MutableState<Boolean>
 
 
     suspend fun deleteNotes(vararg notes: NoteModel): Result<Boolean>
