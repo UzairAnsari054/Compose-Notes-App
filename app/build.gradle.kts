@@ -41,6 +41,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -91,7 +92,17 @@ dependencies {
     testImplementation(libs.room.test)
     kapt(libs.room.compiler)
 
+    // Icons
     implementation(libs.material.icons)
+
+    // Live data
+    implementation(libs.androidx.runtime.livedata)
+
+    // Datastore
+    implementation(libs.androidx.datastore.preferences)
+
+    // Accompanist - Status Bar
+    implementation(libs.accompanist.system.ui.controller)
 }
 
 kapt {

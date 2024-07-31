@@ -1,6 +1,5 @@
-package com.example.composenotesapp1.data.local.vm
+package com.example.composenotesapp1.ui.notes
 
-import android.provider.ContactsContract.CommonDataKinds.Note
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.LiveData
@@ -28,9 +27,9 @@ interface NotesPageBaseVm {
     suspend fun deleteNoteList(vararg notes: NoteModel): Result<Boolean>
 
     val isMarking: MutableState<Boolean>
-    fun clearMarkingEvent()
+    fun closeMarkingEvent()
 
     val isSearching: MutableState<Boolean>
     val searchingTitleText: MutableState<String>
-    fun clearSearchEvent()
+    fun closeSearchEvent()
 }

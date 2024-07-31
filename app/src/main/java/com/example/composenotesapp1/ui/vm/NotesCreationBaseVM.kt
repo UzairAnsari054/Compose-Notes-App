@@ -1,4 +1,4 @@
-package com.example.composenotesapp1.data.local.vm
+package com.example.composenotesapp1.ui.vm
 
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.MutableLiveData

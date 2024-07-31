@@ -1,4 +1,4 @@
-package com.example.composenotesapp1.data.local.vm
+package com.example.composenotesapp1.ui.notes
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -81,13 +81,13 @@ class NotesPageVm @Inject constructor(
             }
         }
 
-    override fun clearMarkingEvent() {
+    override fun closeMarkingEvent() {
         isMarking.value = false
         markedNoteList.clear()
     }
 
 
-    override fun clearSearchEvent() {
+    override fun closeSearchEvent() {
         isSearching.value = false
         searchingTitleText.value = ""
     }
