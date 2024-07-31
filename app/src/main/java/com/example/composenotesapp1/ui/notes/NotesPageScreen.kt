@@ -46,11 +46,11 @@ import com.example.composenotesapp1.components.LockScreenOrientation
 import com.example.composenotesapp1.components.dialog.LoadingDialog
 import com.example.composenotesapp1.components.dialog.TextDialog
 import com.example.composenotesapp1.data.model.NoteModel
-import com.example.composenotesapp1.ui.notes.components.FilterSheet
 import com.example.composenotesapp1.ui.notes.components.drawer.NavDrawer
 import com.example.composenotesapp1.ui.notes.components.item.NoteItem
+import com.example.composenotesapp1.ui.notes.components.navbar.NotesAppBar
+import com.example.composenotesapp1.ui.notes.components.sheet.FilterSheet
 import kotlinx.coroutines.launch
-import okhttp3.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -140,7 +140,45 @@ fun NotesPageScreen(
         content = {
             Scaffold(
                 topBar = {
-
+                    NotesAppBar(
+                        isMarking = viewModel.isMarking.value,
+                        markedNoteListSize = viewModel.markedNoteList.size,
+                        isSearching = viewModel.isSearching.value,
+                        searchedTitle = viewModel.searchingTitleText.value,
+                        toggleDrawerCallback = {
+                            scope.launch {
+                                drawerState.open()
+                            }
+                        },
+                        selectAllCallback = {
+                            viewModel.noteList.value?.getOrNull().let {
+                                if (it != null) viewModel.markAllNote(it)
+                            }
+                        },
+                        unSelectAllCallback = {
+                            viewModel.unMarkAllNote()
+                        },
+                        onSearchValueChange = {
+                            viewModel.searchingTitleText.value = it
+                        },
+                        closeMarkingCallback = {
+                            viewModel.closeMarkingEvent()
+                        },
+                        searchCallback = {
+                            viewModel.isSearching.value = true
+                            viewModel.searchingTitleText.value = ""
+                        },
+                        sortCallback = {
+                            openBottomSheet.value = true
+                        },
+                        deleteCallback = {
+                            deleteDialog.value = true
+                        },
+                        closeSearchCallback = {
+                            Log.d("pressed", "close pressed")
+                            viewModel.closeSearchEvent()
+                        }
+                    )
                 },
                 snackbarHost = { SnackbarHost(snackBarHostState) },
                 floatingActionButton = {
