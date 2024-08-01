@@ -103,6 +103,10 @@ dependencies {
 
     // Accompanist - Status Bar
     implementation(libs.accompanist.system.ui.controller)
+
+    // App Updates
+    implementation(libs.app.update)
+    implementation(libs.app.update.ktx)
 }
 
 kapt {

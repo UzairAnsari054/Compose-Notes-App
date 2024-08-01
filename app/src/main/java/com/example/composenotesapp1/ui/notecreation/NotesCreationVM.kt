@@ -1,4 +1,4 @@
-package com.example.composenotesapp1.ui.vm
+package com.example.composenotesapp1.ui.notecreation
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

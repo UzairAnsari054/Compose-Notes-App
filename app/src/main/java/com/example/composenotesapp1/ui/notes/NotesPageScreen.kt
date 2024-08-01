@@ -46,6 +46,7 @@ import com.example.composenotesapp1.components.LockScreenOrientation
 import com.example.composenotesapp1.components.dialog.LoadingDialog
 import com.example.composenotesapp1.components.dialog.TextDialog
 import com.example.composenotesapp1.data.model.NoteModel
+import com.example.composenotesapp1.navigation.Route
 import com.example.composenotesapp1.ui.notes.components.drawer.NavDrawer
 import com.example.composenotesapp1.ui.notes.components.item.NoteItem
 import com.example.composenotesapp1.ui.notes.components.navbar.NotesAppBar
@@ -187,7 +188,7 @@ fun NotesPageScreen(
                             viewModel.closeMarkingEvent()
                             viewModel.closeSearchEvent()
 
-//                            navController.navigate(Route.NoteCreationPage.routeName)
+                            navController.navigate(Route.NoteCreationPage.routeName)
                         },
                         modifier = Modifier.semantics {
                             testTag = TestTags.ADD_NOTE_FAB
@@ -230,7 +231,7 @@ fun NotesPageScreen(
                                                 viewModel.closeMarkingEvent()
                                                 viewModel.closeSearchEvent()
 
-//                                                navController.navigate("${Route.NoteDetailPage.routeName}/${it.id}")
+                                                navController.navigate("${Route.NoteDetailPage.routeName}/${it.id}")
                                             }
                                         },
                                         onLongClick = {

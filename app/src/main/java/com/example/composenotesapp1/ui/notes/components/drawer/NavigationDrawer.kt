@@ -2,9 +2,9 @@ package com.example.composenotesapp1.ui.notes.components.drawer
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,7 +46,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.SemanticsProperties.TestTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.SpanStyle
@@ -56,6 +55,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.composenotesapp1.BuildConfig
 import com.example.composenotesapp1.R
 import com.example.composenotesapp1.commons.ColorPalletName
 import com.example.composenotesapp1.commons.ColorSchemeName
@@ -71,20 +71,12 @@ import java.util.Locale
 
 @Composable
 fun NavDrawer(
-    drawerState: DrawerState,
-    onError: (String) -> Unit,
-    content: @Composable () -> Unit
+    drawerState: DrawerState, content: @Composable () -> Unit, onError: (String) -> Unit
 ) {
-
     val context = LocalContext.current
-
     val configuration = LocalConfiguration.current
+
     val screenWidth = configuration.screenWidthDp.dp
-
-    val scope = rememberCoroutineScope()
-
-    val appPath = ""
-    val devPagePath = ""
 
     fun openPlayStore(appURL: String) {
         val playIntent: Intent = Intent().apply {
@@ -98,8 +90,11 @@ fun NavDrawer(
         }
     }
 
+    val appPath = "https://play.google.com/store/apps/details?id=com.digiventure.ventnote"
+    val devPagePath = "https://play.google.com/store/apps/developer?id=DigiVenture"
 
     val dataStore = NoteDataStore(LocalContext.current)
+
     var currentScheme by remember { mutableStateOf("") }
 
     LaunchedEffect(key1 = Unit) {
@@ -108,82 +103,75 @@ fun NavDrawer(
         }
     }
 
+    val scope = rememberCoroutineScope()
+
     fun setColorPallet(colorPallet: String) {
         scope.launch {
-            dataStore.setStringData(key = Constants.COLOR_PALLET, data = colorPallet)
+            dataStore.setStringData(Constants.COLOR_PALLET, colorPallet)
         }
     }
 
     fun setColorScheme(colorScheme: String) {
         scope.launch {
-            dataStore.setStringData(key = Constants.COLOR_SCHEME, data = colorScheme)
+            Log.d("state", colorScheme)
+            dataStore.setStringData(Constants.COLOR_SCHEME, colorScheme)
         }
     }
 
+    ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
+        ModalDrawerSheet(
+            drawerShape = RectangleShape,
+            drawerContainerColor = MaterialTheme.colorScheme.background,
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(0.dp)
+                .width(screenWidth - 50.dp)
+        ) {
+            SectionTitle(title = stringResource(id = R.string.about_us))
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet(
-                drawerShape = RectangleShape,
-                drawerContainerColor = MaterialTheme.colorScheme.background,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(0.dp)
-                    .width(screenWidth - 50.dp)
+            NavDrawerItem(leftIcon = Icons.Filled.Star,
+                title = stringResource(id = R.string.rate_app),
+                subtitle = stringResource(id = R.string.rate_app_description),
+                testTagName = "",
+                onClick = { openPlayStore(appPath) })
+
+            NavDrawerItem(leftIcon = Icons.Filled.Shop,
+                title = stringResource(id = R.string.more_apps),
+                subtitle = stringResource(id = R.string.more_apps_description),
+                testTagName = "",
+                onClick = { openPlayStore(devPagePath) })
+
+            NavDrawerItem(leftIcon = Icons.Filled.Update,
+                title = stringResource(id = R.string.app_version),
+                subtitle = BuildConfig.VERSION_NAME,
+                testTagName = "",
+                onClick = { })
+
+            SectionTitle(title = stringResource(id = R.string.preferences))
+
+            NavDrawerColorPicker(
+                leftIcon = Icons.Filled.ColorLens,
+                title = stringResource(id = R.string.theme_color),
+                testTagName = ""
             ) {
-                SectionTitle(title = stringResource(id = R.string.about_us))
-
-                NavDrawerItem(
-                    leftIcon = Icons.Filled.Star,
-                    title = stringResource(id = R.string.rate_app),
-                    subtitle = stringResource(id = R.string.rate_app_description),
-                    testTagName = "",
-                    onClick = { openPlayStore(appPath) })
-
-                NavDrawerItem(
-                    leftIcon = Icons.Filled.Shop,
-                    title = stringResource(id = R.string.more_apps),
-                    subtitle = stringResource(id = R.string.more_apps_description),
-                    testTagName = "",
-                    onClick = { openPlayStore(devPagePath) })
-
-                NavDrawerItem(
-                    leftIcon = Icons.Filled.Update,
-                    title = stringResource(id = R.string.app_version),
-                    subtitle = "BuildConfig.VEERSION_NAME = 1.0",
-                    testTagName = "",
-                    onClick = { })
-
-                SectionTitle(title = stringResource(id = R.string.preferences))
-
-                NavDrawerColorPicker(
-                    leftIcon = Icons.Filled.ColorLens,
-                    title = stringResource(id = R.string.theme_color),
-                    testTagName = ""
-                ) {
-                    setColorPallet(it.second)
-                }
-
-                NavDrawerItemColorSwitchScheme(
-                    leftIcon = Icons.Filled.Bedtime,
-                    title = stringResource(id = R.string.theme_setting),
-                    testTagName = "",
-                    currentScheme = currentScheme
-                ) {
-                    setColorScheme(it)
-                }
+                setColorPallet(it.second)
             }
-        },
-        content = { content() },
-        modifier = Modifier.semantics { testTag = TestTags.NAV_DRAWER }
-    )
+
+            NavDrawerItemColorSchemeSwitch(
+                leftIcon = Icons.Filled.Bedtime,
+                title = stringResource(id = R.string.theme_setting),
+                currentScheme = currentScheme,
+                testTagName = "",
+            ) {
+                setColorScheme(it)
+            }
+        }
+    }, content = { content() }, modifier = Modifier.semantics { testTag = TestTags.NAV_DRAWER })
 }
 
+
 @Composable
-fun SectionTitle(
-    title: String
-) {
+fun SectionTitle(title: String) {
     val firstLetterColor = MaterialTheme.colorScheme.primary
     val restLetterColor = MaterialTheme.colorScheme.onSurface
 
@@ -210,43 +198,38 @@ fun SectionTitle(
         },
         modifier = Modifier.padding(
             start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp
-        )
+        ),
     )
 }
 
 @Composable
 fun NavDrawerItem(
-    leftIcon: ImageVector,
-    title: String,
-    subtitle: String,
-    testTagName: String,
-    onClick: () -> Unit
+    leftIcon: ImageVector, title: String, subtitle: String, testTagName: String, onClick: () -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 12.dp)
-            .semantics { testTag = testTagName },
-        verticalAlignment = Alignment.CenterVertically
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .clickable { onClick() }
+        .padding(start = 16.dp, end = 16.dp, bottom = 12.dp, top = 8.dp)
+        .semantics { testTag = testTagName }, verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            Icon(
-                imageVector = leftIcon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .size(20.dp)
-            )
+            Box(modifier = Modifier.padding(8.dp)) {
+                Icon(
+                    leftIcon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
+
         Column(
             modifier = Modifier
-                .padding(start = 12.dp)
+                .padding(start = 12.dp, bottom = 1.dp)
                 .weight(1f)
         ) {
             Text(
@@ -273,7 +256,6 @@ fun NavDrawerColorPicker(
     testTagName: String,
     onColorPicked: (color: Pair<Color, String>) -> Unit
 ) {
-
     val colorList = listOf(
         Pair(PurpleLightPrimary, ColorPalletName.PURPLE),
         Pair(CrimsonLightPrimary, ColorPalletName.CRIMSON),
@@ -284,28 +266,27 @@ fun NavDrawerColorPicker(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 12.dp)
-            .semantics { testTag = testTagName },
-        verticalAlignment = Alignment.CenterVertically
+            .padding(start = 16.dp, end = 16.dp, bottom = 12.dp, top = 8.dp)
+            .semantics { testTag = testTagName }, verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            Icon(
-                imageVector = leftIcon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .size(20.dp)
-            )
+            Box(modifier = Modifier.padding(8.dp)) {
+                Icon(
+                    leftIcon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
 
         Column(
             modifier = Modifier
-                .padding(start = 12.dp)
+                .padding(start = 12.dp, bottom = 1.dp)
                 .weight(1f)
         ) {
             Text(
@@ -315,14 +296,17 @@ fun NavDrawerColorPicker(
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(bottom = 2.dp)
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            Row {
                 colorList.forEach {
                     Box(modifier = Modifier
                         .clip(RoundedCornerShape(8.dp))
                         .width(24.dp)
                         .height(24.dp)
                         .background(it.first)
-                        .clickable { onColorPicked(it) })
+                        .clickable {
+                            onColorPicked(it)
+                        })
+                    Box(modifier = Modifier.padding(start = 2.dp, end = 2.dp))
                 }
             }
         }
@@ -330,17 +314,18 @@ fun NavDrawerColorPicker(
 }
 
 @Composable
-fun NavDrawerItemColorSwitchScheme(
+fun NavDrawerItemColorSchemeSwitch(
     leftIcon: ImageVector,
     title: String,
     testTagName: String,
     currentScheme: String,
     onColorSchemePicked: (scheme: String) -> Unit
 ) {
-    val lightModeString = stringResource(id = R.string.switch_to_light_mode)
-    val darkModeString = stringResource(id = R.string.switch_to_dark_mode)
+    val lightModeString = stringResource(R.string.switch_to_light_mode)
+    val darkModeString = stringResource(R.string.switch_to_dark_mode)
     val subtitle = if (currentScheme == ColorSchemeName.DARK_MODE)
         lightModeString else darkModeString
+
 
     fun onTileClicked() {
         if (subtitle == darkModeString) {
@@ -353,9 +338,11 @@ fun NavDrawerItemColorSwitchScheme(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 12.dp)
+            .padding(start = 16.dp, end = 16.dp, bottom = 12.dp, top = 8.dp)
             .semantics { testTag = testTagName }
-            .clickable { onTileClicked() },
+            .clickable {
+                onTileClicked()
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -363,19 +350,19 @@ fun NavDrawerItemColorSwitchScheme(
                 .clip(RoundedCornerShape(8.dp))
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            Icon(
-                imageVector = leftIcon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .size(20.dp)
-            )
+            Box(modifier = Modifier.padding(8.dp)) {
+                Icon(
+                    leftIcon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
 
         Column(
             modifier = Modifier
-                .padding(start = 12.dp)
+                .padding(start = 12.dp, bottom = 1.dp)
                 .weight(1f)
         ) {
             Text(
@@ -394,19 +381,18 @@ fun NavDrawerItemColorSwitchScheme(
         }
 
         Icon(
-            imageVector = Icons.Filled.ChevronRight,
+            Icons.Filled.ChevronRight,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.size(20.dp)
         )
-
     }
 }
 
 @Preview
 @Composable
-private fun DrawerPreview() {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
-    NavDrawer(drawerState = drawerState, onError = {}, content = {})
-
+fun DrawerPreview() {
+    val drawerState = rememberDrawerState(DrawerValue.Open)
+    NavDrawer(drawerState = drawerState, content = { }, onError = {})
 }
+

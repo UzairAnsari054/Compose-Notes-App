@@ -60,135 +60,119 @@ fun NotesAppBar(
     val focusManager = LocalFocusManager.current
     val expanded = remember { mutableStateOf(false) }
 
-    TopAppBar(
-        title = {
-            if (isMarking) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .clickable { expanded.value = true }
-                        .semantics { testTag = TestTags.SELECTED_COUNT_CONTAINER }
-                ) {
-                    NavText(
-                        text = markedNoteListSize.toString(),
-                        size = 16.sp,
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
-                    NavText(
-                        text = stringResource(id = R.string.selected_text),
-                        size = 16.sp,
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
-                    Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = stringResource(id = R.string.dropdown_nav_icon),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-
-                DropdownMenu(
-                    expanded = expanded.value,
-                    onDismissRequest = { expanded.value = false },
-                    modifier = Modifier.semantics { testTag = TestTags.DROPDOWN_SELECT }
-                ) {
-                    DropdownMenuItem(
-                        text = {
-                            Text(
-                                text = stringResource(R.string.select_all),
-                                fontSize = 16.sp,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        },
-                        onClick = {
-                            selectAllCallback()
-                            expanded.value = false
-                        },
-                        modifier = Modifier.semantics { testTag = TestTags.SELECT_ALL_OPTION }
-                    )
-                }
-                HorizontalDivider()
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            text = stringResource(R.string.unselect_all),
-                            fontSize = 16.sp,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    },
-                    onClick = {
-                        unSelectAllCallback()
-                        expanded.value = false
-                    },
-                    modifier = Modifier.semantics { testTag = TestTags.UNSELECT_ALL_OPTION })
-            } else if (isSearching) {
-                TextField(
-                    value = searchedTitle,
-                    onValueChange = { onSearchValueChange(it) },
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent,
-                        cursorColor = MaterialTheme.colorScheme.primary,
-                        focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                        unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                    ),
-                    textStyle = TextStyle(
-                        color = MaterialTheme.colorScheme.primary,
-                        fontSize = 16.sp,
-                        lineHeight = 0.sp
-                    ),
-                    singleLine = true,
-                    modifier = Modifier
-                        .padding(bottom = 0.dp)
-                        .semantics { testTag = TestTags.TOP_APPBAR_TEXT_FIELD },
-                    placeholder = {
-                        NavText(text = stringResource(R.string.search_textField),
-                            size = 16.sp,
-                            modifier = Modifier.semantics { })
-                    })
-            } else {
-                Text(
-                    text = stringResource(id = R.string.title),
-                    color = MaterialTheme.colorScheme.primary,
-                    style = TextStyle(
-                        fontWeight = FontWeight.SemiBold, fontSize = 20.sp
-                    ),
-                    modifier = Modifier
-                        .padding(start = 4.dp)
-                        .semantics { testTag = TestTags.TOP_APPBAR_TITLE },
+    TopAppBar(title = {
+        if (isMarking) {
+            Row(verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .clickable { expanded.value = true }
+                    .semantics { testTag = TestTags.SELECTED_COUNT_CONTAINER }) {
+                NavText(
+                    text = markedNoteListSize.toString(),
+                    size = 16.sp,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+                NavText(
+                    text = stringResource(R.string.selected_text),
+                    size = 16.sp,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+                Icon(
+                    Icons.Default.ArrowDropDown,
+                    contentDescription = stringResource(R.string.dropdown_nav_icon),
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
-        },
-        colors = topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-        ),
-        navigationIcon = {
-            LeadingIcon(
-                isMarking = isMarking,
-                closeMarkingCallback = { closeMarkingCallback() },
-                toggleDrawerCallback = { toggleDrawerCallback() })
-        },
-        actions = {
-            TrailingMenuIcons(
-                isMarking = isMarking,
-                markedItemsCount = markedNoteListSize,
-                isSearching = isSearching,
-                searchCallback = {
-                    searchCallback()
-                    focusManager.clearFocus()
+
+            DropdownMenu(expanded = expanded.value,
+                onDismissRequest = { expanded.value = false },
+                modifier = Modifier.semantics { testTag = TestTags.DROPDOWN_SELECT }) {
+                DropdownMenuItem(text = {
+                    Text(
+                        text = stringResource(R.string.select_all),
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }, onClick = {
+                    selectAllCallback()
+                    expanded.value = false
+                }, modifier = Modifier.semantics { testTag = TestTags.SELECT_ALL_OPTION })
+                HorizontalDivider()
+                DropdownMenuItem(text = {
+                    Text(
+                        text = stringResource(R.string.unselect_all),
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }, onClick = {
+                    unSelectAllCallback()
+                    expanded.value = false
+                }, modifier = Modifier.semantics { testTag = TestTags.UNSELECT_ALL_OPTION })
+            }
+        } else if (isSearching) {
+            TextField(value = searchedTitle,
+                onValueChange = {
+                    onSearchValueChange(it)
                 },
-                sortCallback = {
-                    sortCallback()
-                },
-                deleteCallback = {
-                    deleteCallback()
-                },
-                closeSearchCallback = {
-                    closeSearchCallback()
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                ),
+                textStyle = TextStyle(
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 16.sp,
+                    lineHeight = 0.sp
+                ),
+                singleLine = true,
+                modifier = Modifier
+                    .padding(bottom = 0.dp)
+                    .semantics { testTag = TestTags.TOP_APPBAR_TEXT_FIELD },
+                placeholder = {
+                    NavText(text = stringResource(R.string.search_textField),
+                        size = 16.sp,
+                        modifier = Modifier.semantics { })
                 })
-        }, modifier = Modifier.semantics {
-            testTag = TestTags.TOP_APPBAR
-        })
+        } else {
+            Text(
+                text = stringResource(id = R.string.title),
+                color = MaterialTheme.colorScheme.primary,
+                style = TextStyle(
+                    fontWeight = FontWeight.SemiBold, fontSize = 20.sp
+                ),
+                modifier = Modifier
+                    .padding(start = 4.dp)
+                    .semantics { testTag = TestTags.TOP_APPBAR_TITLE },
+            )
+        }
+    }, colors = topAppBarColors(
+        containerColor = MaterialTheme.colorScheme.surface,
+    ), navigationIcon = {
+        LeadingIcon(isMarking = isMarking, closeMarkingCallback = {
+            closeMarkingCallback()
+        }, toggleDrawerCallback = { toggleDrawerCallback() })
+    }, actions = {
+        TrailingMenuIcons(isMarking = isMarking,
+            markedItemsCount = markedNoteListSize,
+            isSearching = isSearching,
+            searchCallback = {
+                searchCallback()
+                focusManager.clearFocus()
+            },
+            sortCallback = {
+                sortCallback()
+            },
+            deleteCallback = {
+                deleteCallback()
+            },
+            closeSearchCallback = {
+                closeSearchCallback()
+            })
+    }, modifier = Modifier.semantics {
+        testTag = TestTags.TOP_APPBAR
+    })
 }
 
 @Composable
@@ -258,9 +242,6 @@ fun TrailingMenuIcons(
 @Composable
 fun NavText(text: String, size: TextUnit, modifier: Modifier) {
     Text(
-        text = text,
-        fontSize = size,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = modifier
+        text = text, fontSize = size, color = MaterialTheme.colorScheme.primary, modifier = modifier
     )
 }

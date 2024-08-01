@@ -33,50 +33,59 @@ fun NoteItem(
     onLongClick: () -> Unit,
     onCheckClick: () -> Unit
 ) {
-    Box(modifier = Modifier
-        .semantics { contentDescription = "Note item ${data.id}" }
-        .combinedClickable(
-            onClick = { if (isMarking) onCheckClick() else onClick() },
-            onLongClick = { onLongClick() }
-        )
-        .clip(RoundedCornerShape(12.dp))
-        .background(MaterialTheme.colorScheme.surface)
+    val shape = RoundedCornerShape(12.dp)
+
+    Box(
+        modifier = Modifier
+            .semantics { contentDescription = "Note item ${data.id}" }
+            .combinedClickable(
+                onClick = { if (isMarking) onCheckClick() else onClick() },
+                onLongClick = { onLongClick() }
+            )
+            .clip(shape)
+            .background(MaterialTheme.colorScheme.primary)
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    start = if (isMarked) 8.dp else 0.dp,
-                    end = 16.dp,
-                    top = 16.dp,
-                    bottom = 16.dp
-                ),
-            horizontalAlignment = Alignment.Start
+                .padding(start = if (isMarked) 8.dp else 0.dp)
+                .background(MaterialTheme.colorScheme.surface)
         ) {
-            Text(
-                text = data.title,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 4.dp)
-            )
-            Text(
-                text = data.note,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 1.dp)
-            )
-            Text(
-                text = DateUtil.convertDateString("EEEE, MMMM d h:mm a", data.createdAt.toString()),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = data.title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                Text(
+                    text = data.note,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 1.dp)
+                )
+                Text(
+                    text = DateUtil.convertDateString(
+                        "EEEE, MMMM d h:mm a",
+                        data.createdAt.toString()
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
+            }
         }
     }
 }

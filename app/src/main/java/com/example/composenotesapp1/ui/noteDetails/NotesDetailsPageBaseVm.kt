@@ -1,4 +1,4 @@
-package com.example.composenotesapp1.ui.vm
+package com.example.composenotesapp1.ui.noteDetails
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -8,8 +8,6 @@ import com.example.composenotesapp1.data.model.NoteModel
 interface NotesDetailsPageBaseVm {
 
     val loader: MutableLiveData<Boolean>
-
-    val markedNoteList: SnapshotStateList<NoteModel>
 
     val noteDetails: MutableLiveData<Result<NoteModel>>
 
