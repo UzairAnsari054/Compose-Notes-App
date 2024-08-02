@@ -118,7 +118,9 @@ fun NavDrawer(
         }
     }
 
-    ModalNavigationDrawer(drawerState = drawerState, drawerContent = {
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
         ModalDrawerSheet(
             drawerShape = RectangleShape,
             drawerContainerColor = MaterialTheme.colorScheme.background,
@@ -166,7 +168,9 @@ fun NavDrawer(
                 setColorScheme(it)
             }
         }
-    }, content = { content() }, modifier = Modifier.semantics { testTag = TestTags.NAV_DRAWER })
+    },
+        content = { content() },
+        modifier = Modifier.semantics { testTag = TestTags.NAV_DRAWER })
 }
 
 
@@ -206,7 +210,8 @@ fun SectionTitle(title: String) {
 fun NavDrawerItem(
     leftIcon: ImageVector, title: String, subtitle: String, testTagName: String, onClick: () -> Unit
 ) {
-    Row(modifier = Modifier
+    Row(
+        modifier = Modifier
         .fillMaxWidth()
         .clickable { onClick() }
         .padding(start = 16.dp, end = 16.dp, bottom = 12.dp, top = 8.dp)

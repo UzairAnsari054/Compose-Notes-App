@@ -110,7 +110,10 @@ fun FilterSheet(
                 )
             )
             Box(modifier = Modifier.padding(8.dp))
-            OrderByList(orderByOptions = orderByOptions, selectedValue = selectedOrderBy.value) {
+            OrderByList(
+                orderByOptions = orderByOptions,
+                selectedValue = selectedOrderBy.value
+            ) {
                 selectedOrderBy.value = it
             }
             Box(modifier = Modifier.padding(16.dp))

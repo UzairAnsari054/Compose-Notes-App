@@ -263,9 +263,13 @@ fun NotesPageScreen(
         modifier = Modifier.semantics { testTag = TestTags.CONFIRMATION_DIALOG })
 
 
-    FilterSheet(openBottomSheet, bottomSheetState, onDismiss = { openBottomSheet.value = false } ) {
-            sortBy, orderBy -> viewModel.sortAndOrder(sortBy, orderBy)
-    }
+    FilterSheet(
+        openBottomSheet = openBottomSheet,
+        bottomSheetState = bottomSheetState,
+        onDismiss = { openBottomSheet.value = false },
+        onFilter = { sortBy, orderBy -> viewModel.sortAndOrder(sortBy, orderBy) }
+    )
+
 }
 
 @Preview

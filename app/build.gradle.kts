@@ -71,7 +71,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-
     // Dagger - Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
